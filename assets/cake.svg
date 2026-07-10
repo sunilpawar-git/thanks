@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Plate / Base line -->
+  <path d="M15,85 L85,85" stroke="#3c3c3c" stroke-width="4" stroke-linecap="round" />
+  <!-- Cake Base -->
+  <rect x="22" y="55" width="56" height="26" rx="4" fill="#a0522d" />
+  <rect x="22" y="65" width="56" height="6" fill="#f4a460" />
+  <!-- Top Layer -->
+  <rect x="28" y="32" width="44" height="23" rx="3" fill="#cd853f" />
+  <rect x="28" y="42" width="44" height="5" fill="#f4a460" />
+  <!-- Frosting / Cream Drips -->
+  <path d="M 28 32 C 32 37, 34 37, 38 32 C 42 37, 44 37, 48 32 C 52 37, 54 37, 58 32 C 62 37, 64 37, 68 32 C 70 37, 72 37, 72 32 L 72 35 C 72 38, 70 40, 68 37 C 64 40, 62 40, 58 37 C 54 40, 52 40, 48 37 C 44 40, 42 40, 38 37 C 34 40, 32 40, 28 37 Z" fill="#fff5ee" />
+  <path d="M 22 55 C 27 61, 31 61, 36 55 C 41 61, 45 61, 50 55 C 55 61, 59 61, 64 55 C 69 61, 73 61, 78 55 L 78 58 C 78 62, 73 64, 69 60 C 64 64, 59 64, 55 60 C 50 64, 45 64, 41 60 C 36 64, 31 64, 27 60 Z" fill="#fff5ee" />
+  <!-- Candles -->
+  <rect x="36" y="16" width="3" height="16" rx="1" fill="#00bfff" />
+  <rect x="49" y="12" width="3" height="20" rx="1" fill="#ff1493" />
+  <rect x="61" y="16" width="3" height="16" rx="1" fill="#32cd32" />
+  <!-- Flames (glowing animations will be applied in CSS) -->
+  <path d="M 37.5 6 C 36 10, 36 13, 37.5 16 C 39 13, 39 10, 37.5 6 Z" fill="#ffa500" class="flame" />
+  <path d="M 50.5 2 C 49 6, 49 9, 50.5 12 C 52 9, 52 6, 50.5 2 Z" fill="#ff4500" class="flame" />
+  <path d="M 62.5 6 C 61 10, 61 13, 62.5 16 C 64 13, 64 10, 62.5 6 Z" fill="#ffa500" class="flame" />
+</svg>

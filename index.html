@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Gratitude Engine v42.0 - Birthday OS</title>
+  <!-- SEO Best Practices -->
+  <meta name="description" content="Birthday OS Appreciation Module: A personalized gratitude engine built for friends wishing me on my birthday.">
+  
+  <!-- Font Links -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=42.0">
+</head>
+<body>
+  <!-- Canvas for Confetti Overlay -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- VS Code Workbench Wrapper -->
+  <div class="workbench" id="workbench-app">
+    <!-- Sidebar / File Explorer -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span>EXPLORER: THANKS</span>
+      </div>
+      <div class="file-tree">
+        <div class="tree-item folder open">
+          <span class="arrow">▼</span>
+          <span class="icon">📁</span>
+          <span class="label">thanks</span>
+        </div>
+        <div class="tree-items">
+          <div class="tree-item file">
+            <span class="icon">🌐</span>
+            <span class="label">index.html</span>
+          </div>
+          <div class="tree-item file">
+            <span class="icon">🎨</span>
+            <span class="label">style.css</span>
+          </div>
+          <div class="tree-item file">
+            <span class="icon">⚡</span>
+            <span class="label">script.js</span>
+          </div>
+          <div class="tree-item file">
+            <span class="icon">✨</span>
+            <span class="label">confetti.js</span>
+          </div>
+          <div class="tree-item folder">
+            <span class="arrow">▶</span>
+            <span class="icon">📁</span>
+            <span class="label">assets</span>
+          </div>
+          <div class="tree-item file active">
+            <span class="icon">📝</span>
+            <span class="label">Appreciation.md</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace (Tabs & Editor/Terminal area) -->
+    <main class="editor-area">
+      <!-- Tabs bar -->
+      <div class="tabs-container">
+        <div class="tab active" id="tab-appreciation">
+          <span class="icon">📝</span>
+          <span class="tab-title">Appreciation.md <span class="preview-tag">Preview</span></span>
+          <span class="close-btn">×</span>
+        </div>
+        <div class="tab" id="tab-terminal">
+          <span class="icon">💻</span>
+          <span class="tab-title">terminal</span>
+          <span class="close-btn">×</span>
+        </div>
+      </div>
+
+      <!-- Editor Window -->
+      <div class="editor-window">
+        <!-- Terminal Panel (Pre-execution & AI typing screen) -->
+        <div class="terminal-panel" id="terminal-screen">
+          <div class="terminal-body" id="terminal-console">
+            <div class="line"><span class="prompt">C:\Users\Sunil&gt;</span> <span class="typed-command">BirthdayParser.exe --target <span id="terminal-target-name">Friend</span></span></div>
+            <div id="boot-sequence-logs">
+              <!-- Sequential boot output elements will be appended here by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Rendered Markdown Preview Area (Appreciation card) -->
+        <div class="markdown-preview hidden" id="preview-screen">
+          <div class="appreciation-container">
+            <header class="appreciation-header">
+              <h1>👋 Hey <span class="visitor-name">Friend</span>!</h1>
+              <div class="tag-row">
+                <span class="badge badge-success">✓ Wish received</span>
+                <span class="badge badge-joy">✓ Smile generated</span>
+                <span class="badge badge-stat">✓ Happiness +10</span>
+                <span class="badge badge-friend">✓ Friend detected</span>
+              </div>
+            </header>
+
+            <section class="appreciation-body">
+              <p class="intro">Your birthday wish became part of my <strong>Version 42.0 Release</strong>.</p>
+              
+              <div class="quote-card">
+                <blockquote>
+                  "People often forget gifts, but they rarely forget kind words."
+                </blockquote>
+                <cite>— Sunil</cite>
+              </div>
+
+              <p class="letter">
+                Thank you for taking a minute out of your day to make mine better.
+              </p>
+
+              <!-- Interactive Cake Section -->
+              <div class="interactive-assets">
+                <div class="asset-wrapper" id="cake-wrapper" title="Double tap the cake for a secret!">
+                  <img src="assets/cake.svg" alt="Birthday Cake" id="cake-icon">
+                  <div class="tap-hint">Double Tap!</div>
+                </div>
+                <div class="asset-wrapper" id="heart-wrapper">
+                  <img src="assets/heart.svg" alt="Heart" id="heart-icon" class="pulse-animation">
+                </div>
+              </div>
+
+              <!-- AI Message Display slot (types out the random thank yous) -->
+              <div class="ai-mode-container hidden" id="ai-message-box">
+                <div class="ai-box-header">
+                  <span class="ai-title">🤖 AI Gratitude Engine</span>
+                  <span class="ai-status">Ready</span>
+                </div>
+                <div class="ai-box-content" id="ai-message-content">
+                  <!-- Custom AI message prints here -->
+                </div>
+              </div>
+
+              <!-- Interactive Buttons -->
+              <div class="button-row">
+                <button class="btn btn-primary" id="btn-generate-ai">
+                  <span class="btn-icon">🎲</span> Generate Thank You
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="status-bar">
+      <div class="status-left">
+        <span class="status-item bg-blue"><span class="icon">⎋</span> main*</span>
+        <span class="status-item text-green" id="status-build-text">⚡ Building...</span>
+      </div>
+      <div class="status-right">
+        <span class="status-item">Ln 1, Col 1</span>
+        <span class="status-item">UTF-8</span>
+        <span class="status-item">Markdown</span>
+      </div>
+    </footer>
+
+    <!-- VS Code style Toast Notification for Achievements -->
+    <div class="toast-notification hidden" id="achievement-toast">
+      <div class="toast-icon">🏆</div>
+      <div class="toast-body">
+        <h4 class="toast-title">Achievement Unlocked!</h4>
+        <p class="toast-text" id="achievement-desc">You found the hidden birthday feature.</p>
+      </div>
+      <button class="toast-close" id="btn-close-toast">×</button>
+    </div>
+  </div>
+
+  <script src="confetti.js?v=42.0"></script>
+  <script src="script.js?v=42.0"></script>
+</body>
+</html>
