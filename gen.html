@@ -247,21 +247,34 @@
       document.getElementById('output-section').classList.add('visible');
 
       try {
-        // is.gd free API — no account/key needed, CORS-enabled
-        const apiUrl = 'https://is.gd/create.php?format=json&url=' + encodeURIComponent(fullUrl);
-        const res = await fetch(apiUrl);
-        const data = await res.json();
+        let shortened = null;
 
-        if (data.shorturl) {
-          outputLink.textContent = data.shorturl;
+        // Try shrtco.de first — confirmed CORS-friendly from browsers
+        try {
+          const r = await fetch('https://api.shrtco.de/v2/shorten?url=' + encodeURIComponent(fullUrl));
+          const d = await r.json();
+          if (d.ok && d.result && d.result.full_short_link) {
+            shortened = d.result.full_short_link;
+          }
+        } catch (_) { /* try next */ }
+
+        // Fallback: is.gd
+        if (!shortened) {
+          try {
+            const r = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(fullUrl));
+            const d = await r.json();
+            if (d.shorturl) shortened = d.shorturl;
+          } catch (_) { /* give up */ }
+        }
+
+        if (shortened) {
+          outputLink.textContent = shortened;
           outputLabel.textContent = '📋 Shortened Link (safe to share on WhatsApp)';
         } else {
-          // API returned error (e.g. URL flagged) — fall back to long URL
           outputLink.textContent = fullUrl;
           outputLabel.textContent = '📋 Full Link (shortener unavailable)';
         }
       } catch (e) {
-        // Network error or CORS — fall back gracefully
         outputLink.textContent = fullUrl;
         outputLabel.textContent = '📋 Full Link (shortener unavailable)';
       }
