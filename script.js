@@ -18,9 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const visitorName = rawName.trim() ? sanitizeHTML(rawName.trim()) : 'Friend';
   
-  // Determine military rank based on name presence
-  const rank = rawName.trim() ? 'COMMANDER' : 'SOLDIER';
-  const fullSalutation = `${rank} ${visitorName.toUpperCase()}`;
+  const fullSalutation = visitorName.toUpperCase();
 
   // Update elements in DOM
   const nameSpans = document.querySelectorAll('.visitor-name');
@@ -69,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { text: 'Connecting to Wish-Base Alpha drop network... OK', delay: 400, type: 'info' },
     { text: 'Initializing Drop Protocol v42.0...', delay: 300, type: 'info' },
     { text: 'PROGRESS_BAR', delay: 700 },
-    { text: `Target identified: ${rank} ${visitorName}`, delay: 300, type: 'success' },
+    { text: `Target identified: ${visitorName}`, delay: 300, type: 'success' },
     { text: 'Altitude verified: 12,000 FT [STABLE]', delay: 200, type: 'success' },
     { text: 'Morale telemetry value: +10 XP logged', delay: 200, type: 'success' },
     { text: 'Parachute deploy system: READY [100%]', delay: 250, type: 'success' },
