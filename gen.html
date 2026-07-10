@@ -284,11 +284,11 @@
 
       let shortened = null;
 
-      // Try TinyURL — GET, CORS-friendly, well-known clean domain
+      // Try is.gd — GET, CORS-friendly, redirects instantly (no interstitial ads)
       try {
-        const r = await fetch('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(encodedUrl));
-        const t = (await r.text()).trim();
-        if (t.startsWith('https://tinyurl.com/')) shortened = t;
+        const r = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(encodedUrl));
+        const d = await r.json();
+        if (d.shorturl) shortened = d.shorturl;
       } catch (_) { /* try next */ }
 
       // Try cleanuri.com — POST, CORS-friendly
@@ -301,15 +301,6 @@
         const d = await r.json();
         if (d.result_url) shortened = d.result_url;
       } catch (_) { /* try next */ }
-
-      // Try is.gd
-      if (!shortened) {
-        try {
-          const r = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(encodedUrl));
-          const d = await r.json();
-          if (d.shorturl) shortened = d.shorturl;
-        } catch (_) { /* try next */ }
-      }
 
       // Try shrtco.de
       if (!shortened) {
