@@ -223,11 +223,11 @@
     <label for="input-msg">Their WhatsApp Message (paste it here)</label>
     <textarea id="input-msg" placeholder="e.g. Happy Birthday Sunil bhai! 🎂 Wishing you all the best!"></textarea>
 
-    <button class="btn" id="btn-generate">⚡ Generate & Shorten Link</button>
+    <button class="btn" id="btn-generate">⚡ Generate Link</button>
 
     <div class="output-section" id="output-section">
       <hr class="divider">
-      <div class="output-label" id="output-label">📋 Shortened Link (safe to share)</div>
+      <div class="output-label">📋 Link (message hidden — safe to share on WhatsApp)</div>
       <div class="output-link" id="output-link"></div>
       <button class="btn-copy" id="btn-copy">📋 Copy Link to Clipboard</button>
       <div class="copy-confirm" id="copy-confirm">✓ Copied! Paste it on WhatsApp.</div>
@@ -250,7 +250,6 @@
     const BASE_URL = 'https://sunilpawar-git.github.io/thanks/';
     const btn = document.getElementById('btn-generate');
     const outputLink = document.getElementById('output-link');
-    const outputLabel = document.getElementById('output-label');
 
     // Base64url encode name + msg as a compact ?d= param (message hidden, no external API needed)
     function buildEncodedUrl(name, msg) {
@@ -261,10 +260,7 @@
       return BASE_URL + '?d=' + b64;
     }
 
-    // Store the encoded URL so preview always works regardless of shortener result
-    let encodedUrl = '';
-
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       const name = document.getElementById('input-name').value.trim();
       const msg  = document.getElementById('input-msg').value.trim();
 
@@ -273,63 +269,16 @@
         return;
       }
 
-      encodedUrl = buildEncodedUrl(name, msg);
+      const encodedUrl = buildEncodedUrl(name, msg);
       document.getElementById('preview-link').href = encodedUrl;
 
-      // Show loading state
-      btn.textContent = '⏳ Shortening...';
-      btn.disabled = true;
-      outputLink.textContent = 'Generating short link...';
+      outputLink.textContent = encodedUrl;
       document.getElementById('output-section').classList.add('visible');
-
-      let shortened = null;
-
-      // Try is.gd — GET, CORS-friendly, redirects instantly (no interstitial ads)
-      try {
-        const r = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(encodedUrl));
-        const d = await r.json();
-        if (d.shorturl) shortened = d.shorturl;
-      } catch (_) { /* try next */ }
-
-      // Try cleanuri.com — POST, CORS-friendly
-      if (!shortened) try {
-        const r = await fetch('https://cleanuri.com/api/v1/shorten', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: 'url=' + encodeURIComponent(encodedUrl)
-        });
-        const d = await r.json();
-        if (d.result_url) shortened = d.result_url;
-      } catch (_) { /* try next */ }
-
-      // Try shrtco.de
-      if (!shortened) {
-        try {
-          const r = await fetch('https://api.shrtco.de/v2/shorten?url=' + encodeURIComponent(encodedUrl));
-          const d = await r.json();
-          if (d.ok && d.result && d.result.full_short_link) shortened = d.result.full_short_link;
-        } catch (_) { /* give up */ }
-      }
-
-      let finalUrl;
-      if (shortened) {
-        finalUrl = shortened;
-        outputLink.textContent = shortened;
-        outputLabel.textContent = '📋 Shortened Link (safe to share on WhatsApp)';
-      } else {
-        // All shorteners failed — use the encoded URL (message is hidden in base64)
-        finalUrl = encodedUrl;
-        outputLink.textContent = encodedUrl;
-        outputLabel.textContent = '📋 Encoded Link — message hidden (paste this on WhatsApp)';
-      }
 
       // QR code via api.qrserver.com — plain <img>, no fetch/CORS involved
       document.getElementById('qr-code').src =
-        'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(finalUrl);
+        'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(encodedUrl);
       document.getElementById('qr-wrap').classList.add('visible');
-
-      btn.textContent = '⚡ Generate & Shorten Link';
-      btn.disabled = false;
     });
 
     document.getElementById('btn-copy').addEventListener('click', () => {
