@@ -810,112 +810,197 @@ body::before {
 }
 
 /* Mobile responsive adaptations */
-@media (max-width: 550px) {
-  .workbench {
-    grid-template-columns: 1fr; /* Hide HUD radar display completely on mobile */
+/* ── MOBILE ────────────────────────────────────────── */
+@media (max-width: 600px) {
+
+  /* Allow the page to scroll instead of being locked to viewport height */
+  html, body {
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
   }
-  
+
+  /* Switch from fixed grid to single-column flow */
+  .workbench {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  /* Hide the radar sidebar — unnecessary on small screens */
   .sidebar {
     display: none;
   }
-  
-  .markdown-preview {
-    padding: 12px 12px 24px 12px;
+
+  /* Editor area fills all remaining space */
+  .editor-area {
+    height: auto;
+    overflow: visible;
   }
-  
+
+  /* Tab bar: allow wrapping, smaller text */
+  .tabs-container {
+    height: auto;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    font-size: 10px;
+    padding: 8px 10px;
+    gap: 5px;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .tab-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;
+  }
+
+  /* Editor window: stop hiding overflow so content is reachable */
+  .editor-window {
+    overflow: visible;
+    height: auto;
+  }
+
+  /* Terminal panel */
+  .terminal-panel {
+    overflow: visible;
+    padding: 16px;
+    font-size: 12px;
+  }
+
+  /* Main preview area: scrollable, comfortable padding */
+  .markdown-preview {
+    overflow: visible;
+    padding: 16px 14px 40px;
+  }
+
   .appreciation-container {
     max-width: 100%;
     transform: none;
   }
-  
+
+  /* Header */
   .appreciation-header h1 {
-    font-size: 20px;
-    margin-bottom: 8px;
+    font-size: 22px;
+    margin-bottom: 10px;
     text-align: center;
   }
-  
+
   .tag-row {
     justify-content: center;
-    gap: 6px;
-    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 14px;
   }
-  
+
   .badge {
     font-size: 9px;
-    padding: 2px 4px;
+    padding: 2px 5px;
   }
-  
+
+  /* Body text */
   .appreciation-body .intro {
     font-size: 13px;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
-  
-  .quote-card {
-    padding: 10px 14px;
-    margin: 10px 0;
-  }
-  
-  .quote-card blockquote {
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  
+
   .appreciation-body .letter {
     font-size: 13px;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
-  
+
+  /* Quote card */
+  .quote-card {
+    padding: 10px 14px;
+    margin: 12px 0;
+  }
+
+  .quote-card blockquote {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Transmission card */
+  .transmission-card {
+    margin: 12px 0;
+    padding: 12px 14px;
+  }
+
+  .transmission-label {
+    font-size: 10px;
+  }
+
+  .transmission-body {
+    font-size: 14px;
+  }
+
+  /* Interactive assets */
   .interactive-assets {
     gap: 24px;
     margin: 10px 0;
   }
-  
+
   .asset-wrapper {
     width: 60px;
     height: 60px;
   }
-  
-  #cake-icon {
-    width: 100%;
-    height: 100%;
-  }
-  
-  #heart-icon {
-    width: 42px;
-    height: 42px;
-  }
-  
+
+  #cake-icon { width: 100%; height: 100%; }
+
+  #heart-icon { width: 42px; height: 42px; }
+
   .tap-hint {
     bottom: -18px;
     font-size: 8px;
     padding: 1px 4px;
   }
-  
+
+  /* AI intel box */
   .ai-mode-container {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0;
     font-size: 11px;
   }
-  
+
   .ai-box-content {
     padding: 8px 12px;
-    min-height: 70px;
-    font-size: 11px;
+    min-height: 60px;
+    font-size: 12px;
   }
-  
+
+  /* Button */
   .btn {
     width: 100%;
     justify-content: center;
     padding: 12px 20px;
     font-size: 13px;
   }
-  
+
+  /* Status bar: tighter */
+  .status-bar {
+    padding: 4px 10px;
+    font-size: 10px;
+    flex-wrap: wrap;
+    gap: 4px;
+    height: auto;
+  }
+
+  .status-item {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  /* Toast */
   .toast-notification {
     left: 10px;
     right: 10px;
-    bottom: 30px;
+    bottom: 20px;
     width: auto;
     padding: 12px;
   }
