@@ -253,8 +253,15 @@
 
       let shortened = null;
 
-      // Try cleanuri.com — POST, CORS-friendly
+      // Try TinyURL — GET, CORS-friendly, well-known clean domain
       try {
+        const r = await fetch('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(encodedUrl));
+        const t = (await r.text()).trim();
+        if (t.startsWith('https://tinyurl.com/')) shortened = t;
+      } catch (_) { /* try next */ }
+
+      // Try cleanuri.com — POST, CORS-friendly
+      if (!shortened) try {
         const r = await fetch('https://cleanuri.com/api/v1/shorten', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
