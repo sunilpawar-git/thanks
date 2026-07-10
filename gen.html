@@ -200,25 +200,31 @@
     <label for="input-msg">Their WhatsApp Message (paste it here)</label>
     <textarea id="input-msg" placeholder="e.g. Happy Birthday Sunil bhai! 🎂 Wishing you all the best!"></textarea>
 
-    <button class="btn" id="btn-generate">⚡ Generate Personalized Link</button>
+    <button class="btn" id="btn-generate">⚡ Generate & Shorten Link</button>
 
     <div class="output-section" id="output-section">
       <hr class="divider">
-      <div class="output-label">📋 Your Personalized Link</div>
+      <div class="output-label" id="output-label">📋 Shortened Link (safe to share)</div>
       <div class="output-link" id="output-link"></div>
       <button class="btn-copy" id="btn-copy">📋 Copy Link to Clipboard</button>
       <div class="copy-confirm" id="copy-confirm">✓ Copied! Paste it on WhatsApp.</div>
       <hr class="divider">
       <p class="preview-hint">
-        <a id="preview-link" href="#" target="_blank">↗ Preview how it looks</a>
+        <a id="preview-link" href="#" target="_blank">↗ Preview how it looks for the wisher</a>
       </p>
     </div>
   </div>
 
   <script>
     const BASE_URL = 'https://sunilpawar-git.github.io/thanks/';
+    const btn = document.getElementById('btn-generate');
+    const outputLink = document.getElementById('output-link');
+    const outputLabel = document.getElementById('output-label');
 
-    document.getElementById('btn-generate').addEventListener('click', () => {
+    // Store the full (long) URL separately so preview always works
+    let fullUrl = '';
+
+    btn.addEventListener('click', async () => {
       const name = document.getElementById('input-name').value.trim();
       const msg  = document.getElementById('input-msg').value.trim();
 
@@ -231,15 +237,41 @@
       params.set('name', name);
       if (msg) params.set('msg', msg);
 
-      const url = BASE_URL + '?' + params.toString();
+      fullUrl = BASE_URL + '?' + params.toString();
+      document.getElementById('preview-link').href = fullUrl;
 
-      document.getElementById('output-link').textContent = url;
-      document.getElementById('preview-link').href = url;
+      // Show loading state
+      btn.textContent = '⏳ Shortening...';
+      btn.disabled = true;
+      outputLink.textContent = 'Generating short link...';
       document.getElementById('output-section').classList.add('visible');
+
+      try {
+        // is.gd free API — no account/key needed, CORS-enabled
+        const apiUrl = 'https://is.gd/create.php?format=json&url=' + encodeURIComponent(fullUrl);
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (data.shorturl) {
+          outputLink.textContent = data.shorturl;
+          outputLabel.textContent = '📋 Shortened Link (safe to share on WhatsApp)';
+        } else {
+          // API returned error (e.g. URL flagged) — fall back to long URL
+          outputLink.textContent = fullUrl;
+          outputLabel.textContent = '📋 Full Link (shortener unavailable)';
+        }
+      } catch (e) {
+        // Network error or CORS — fall back gracefully
+        outputLink.textContent = fullUrl;
+        outputLabel.textContent = '📋 Full Link (shortener unavailable)';
+      }
+
+      btn.textContent = '⚡ Generate & Shorten Link';
+      btn.disabled = false;
     });
 
     document.getElementById('btn-copy').addEventListener('click', () => {
-      const url = document.getElementById('output-link').textContent;
+      const url = outputLink.textContent;
       navigator.clipboard.writeText(url).then(() => {
         const confirm = document.getElementById('copy-confirm');
         confirm.classList.add('show');
