@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   let rawName = urlParams.get('name') || '';
   
-  // Sanitize the input to prevent XSS
+  // Sanitize input to prevent XSS
   function sanitizeHTML(str) {
     return str.replace(/[&<>'"]/g, 
       tag => ({
@@ -18,10 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const visitorName = rawName.trim() ? sanitizeHTML(rawName.trim()) : 'Friend';
   
-  // Update name elements in DOM
+  // Determine military rank based on name presence
+  const rank = rawName.trim() ? 'COMMANDER' : 'SOLDIER';
+  const fullSalutation = `${rank} ${visitorName.toUpperCase()}`;
+
+  // Update elements in DOM
   const nameSpans = document.querySelectorAll('.visitor-name');
   nameSpans.forEach(span => {
-    span.textContent = visitorName;
+    span.textContent = fullSalutation;
   });
   
   const terminalNameSpan = document.getElementById('terminal-target-name');
@@ -29,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     terminalNameSpan.textContent = visitorName;
   }
 
-  // Set active tab switcher logic (purely visual for VS Code feel)
+  // HUD Tab Switcher
   const tabAppreciation = document.getElementById('tab-appreciation');
   const tabTerminal = document.getElementById('tab-terminal');
   const previewScreen = document.getElementById('preview-screen');
@@ -50,26 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
     switchTab(tabTerminal, tabAppreciation, terminalScreen, previewScreen);
   });
 
-  // Initialize Confetti Engine
+  // Confetti Engine
   let confetti = null;
   if (window.ConfettiEngine) {
     confetti = new ConfettiEngine('confetti-canvas');
   }
 
-  // --- Boot Sequence Simulator ---
+  // --- Tactical Telemetry logs sequence ---
   const bootLogsContainer = document.getElementById('boot-sequence-logs');
   const statusBuildText = document.getElementById('status-build-text');
 
   const bootSteps = [
-    { text: 'Initializing Gratitude Engine v42.0...', delay: 300, type: 'info' },
-    { text: 'Loading birthday memories...', delay: 500, type: 'info' },
-    { text: 'PROGRESS_BAR', delay: 800 },
-    { text: 'Wish received from: ' + visitorName, delay: 300, type: 'success' },
-    { text: 'Smile generated: 100% efficiency', delay: 200, type: 'success' },
-    { text: 'Happiness quotient: +10 XP', delay: 250, type: 'success' },
-    { text: 'Friend connection verified: SECURE', delay: 200, type: 'success' },
-    { text: 'Compiling appreciation page...', delay: 400, type: 'info' },
-    { text: 'Build Status: SUCCESS', delay: 300, type: 'success' }
+    { text: '[HUD BROADCAST INCOMING]', delay: 300, type: 'warning' },
+    { text: 'Connecting to Wish-Base Alpha drop network... OK', delay: 400, type: 'info' },
+    { text: 'Initializing Drop Protocol v42.0...', delay: 300, type: 'info' },
+    { text: 'PROGRESS_BAR', delay: 700 },
+    { text: `Target identified: ${rank} ${visitorName}`, delay: 300, type: 'success' },
+    { text: 'Altitude verified: 12,000 FT [STABLE]', delay: 200, type: 'success' },
+    { text: 'Morale telemetry value: +10 XP logged', delay: 200, type: 'success' },
+    { text: 'Parachute deploy system: READY [100%]', delay: 250, type: 'success' },
+    { text: 'Payload deployed. Impact coordinates locked.', delay: 400, type: 'info' },
+    { text: 'MISSION STATUS: ACCOMPLISHED', delay: 300, type: 'success' }
   ];
 
   function createLogLine(text, type = '') {
@@ -87,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     progressWrapper.className = 'progress-bar-container';
     
     const label = document.createElement('span');
-    label.textContent = 'Scanning: ';
+    label.textContent = 'Altitude Lock: ';
     label.style.color = 'var(--text-muted)';
     
     const bar = document.createElement('div');
@@ -110,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let progress = 0;
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 15) + 5;
+      progress += Math.floor(Math.random() * 20) + 5;
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
@@ -122,21 +127,18 @@ document.addEventListener('DOMContentLoaded', () => {
         fill.style.width = progress + '%';
         percent.textContent = progress + '%';
       }
-    }, 80);
+    }, 60);
   }
 
   let stepIndex = 0;
   function executeBootSequence() {
     if (stepIndex >= bootSteps.length) {
-      // Completed boot sequence
       setTimeout(() => {
-        // Transition screen
         switchTab(tabAppreciation, tabTerminal, previewScreen, terminalScreen);
         if (statusBuildText) {
-          statusBuildText.textContent = '✓ Build SUCCESS';
+          statusBuildText.textContent = '✓ MISSION SUCCESS';
           statusBuildText.className = 'status-item text-green';
         }
-        // Blast Confetti
         if (confetti) {
           confetti.blast(2500);
         }
@@ -154,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         const line = createLogLine(step.text, step.type);
         bootLogsContainer.appendChild(line);
-        // Scroll terminal to bottom
         terminalScreen.scrollTop = terminalScreen.scrollHeight;
         stepIndex++;
         executeBootSequence();
@@ -165,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Trigger boot sequence on start
   setTimeout(executeBootSequence, 500);
 
-  // --- AI Gratitude Engine (20 custom heartfelt messages) ---
+  // --- AI Gratitude Engine Briefing pool (20 messages) ---
   const aiMessages = [
     "Some people send gifts.\nSome people send cake.\nYou sent your time.\nThat means just as much.\nThank you! ❤️",
     "A message from you always brightens my day.\nThanks for taking the time to send such kind birthday wishes! ✨",
@@ -218,11 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
     isTyping = true;
     
     aiMessageBox.classList.remove('hidden');
-    aiStatusLabel.textContent = 'Streaming...';
+    aiStatusLabel.textContent = 'DECRYPTING...';
     aiStatusLabel.style.color = 'var(--text-yellow)';
-    aiStatusLabel.style.textShadow = '0 0 10px rgba(220, 220, 170, 0.4)';
+    aiStatusLabel.style.textShadow = 'var(--glow-yellow)';
     
-    // Choose index ensuring no duplicates back-to-back
     let randomIndex;
     do {
       randomIndex = Math.floor(Math.random() * aiMessages.length);
@@ -231,27 +231,45 @@ document.addEventListener('DOMContentLoaded', () => {
     lastIndex = randomIndex;
     const msg = aiMessages[randomIndex];
     
-    // Smooth scroll down to the AI message container (critical for mobile WhatsApp view)
     setTimeout(() => {
       aiMessageBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
 
     typeWriterEffect(msg, aiMessageContent, 20, () => {
       isTyping = false;
-      aiStatusLabel.textContent = 'Ready';
+      aiStatusLabel.textContent = 'SECURE';
       aiStatusLabel.style.color = 'var(--text-green)';
       aiStatusLabel.style.textShadow = 'var(--glow-green)';
       
-      // Blast light confetti
       if (confetti) {
         confetti.blast(1000);
       }
     });
   });
 
-  // --- Double Tap Cake Achievement Easter Egg ---
+  // --- Parachute Drop Animation & Achievement ---
   const cakeWrapper = document.getElementById('cake-wrapper');
+  const parachuteContainer = document.getElementById('parachute-drop-container');
   let lastTap = 0;
+  let isAnimatingParachute = false;
+
+  function triggerParachuteAnimation() {
+    if (isAnimatingParachute) return;
+    isAnimatingParachute = true;
+    
+    parachuteContainer.classList.remove('hidden');
+    parachuteContainer.classList.add('active');
+    
+    // Switch to status tab to show HUD details
+    switchTab(tabAppreciation, tabTerminal, previewScreen, terminalScreen);
+
+    // After animation cycle completes
+    setTimeout(() => {
+      parachuteContainer.classList.remove('active');
+      parachuteContainer.classList.add('hidden');
+      isAnimatingParachute = false;
+    }, 3000);
+  }
 
   function triggerAchievement(message) {
     const toast = document.getElementById('achievement-toast');
@@ -260,12 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
     desc.textContent = message;
     toast.classList.remove('hidden');
     
-    // Trigger confetti
+    // Trigger parachute and confetti
+    triggerParachuteAnimation();
     if (confetti) {
       confetti.blast(2500);
     }
 
-    // Auto dismiss toast
     setTimeout(() => {
       toast.classList.add('hidden');
     }, 6000);
@@ -273,20 +291,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   cakeWrapper.addEventListener('click', () => {
     const now = Date.now();
-    const TIMESPAN = 300; // ms
+    const TIMESPAN = 300;
     if ((now - lastTap) < TIMESPAN) {
-      // Double tap!
-      triggerAchievement("You found the hidden birthday cake feature. Achievement Unlocked! 🏆");
+      triggerAchievement("Supply drop decrypted. Morale values increased. Achievement Unlocked! 🏆");
     }
     lastTap = now;
   });
 
-  // Tap hint for mobile tap events
   cakeWrapper.addEventListener('touchstart', () => {
     const now = Date.now();
-    const TIMESPAN = 300; // ms
+    const TIMESPAN = 300;
     if ((now - lastTap) < TIMESPAN) {
-      triggerAchievement("You found the hidden birthday cake feature. Achievement Unlocked! 🏆");
+      triggerAchievement("Supply drop decrypted. Morale values increased. Achievement Unlocked! 🏆");
     }
     lastTap = now;
   });
@@ -301,19 +317,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let eggBuffer = '';
 
   window.addEventListener('keydown', (e) => {
-    // Only register alphabetical characters
     if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
       eggBuffer += e.key.toLowerCase();
       
-      // Keep buffer length matching the code length
       if (eggBuffer.length > eggCode.length) {
         eggBuffer = eggBuffer.substring(eggBuffer.length - eggCode.length);
       }
       
       if (eggBuffer === eggCode) {
-        // Achievement triggered
-        triggerAchievement("Command 'sudo gratitude --all' executed successfully. Infinite thanks loaded! ❤️");
-        eggBuffer = ''; // clear buffer
+        triggerAchievement("HUD ALERT: Command 'sudo deploy --all-forces' executed. Air support inbound!");
+        eggBuffer = '';
       }
     }
   });

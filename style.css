@@ -1,28 +1,27 @@
-/* Theme variables using HSL for rich styling and control */
+/* Tactical Army Theme variables using HSL and custom olive-phosphor colors */
 :root {
-  --bg-workbench: #181818;
-  --bg-sidebar: #1e1e1e;
-  --bg-editor: #1e1e1e;
-  --bg-tabs: #252526;
-  --bg-tab-active: #1e1e1e;
-  --bg-tab-inactive: #2d2d2d;
-  --bg-status: #007acc;
-  --border-color: #2b2b2b;
+  --bg-workbench: #12150d;
+  --bg-sidebar: #191e12;
+  --bg-editor: #14180e;
+  --bg-tabs: #202617;
+  --bg-tab-active: #14180e;
+  --bg-tab-inactive: #272f1c;
+  --bg-status: #2c351f;
+  --border-color: #2f3b22;
   
-  --text-main: #cccccc;
-  --text-muted: #858585;
-  --text-green: #4af626;
-  --text-cyan: #4fc1ff;
-  --text-yellow: #dcdcaa;
-  --text-orange: #ce9178;
-  --text-purple: #c586c0;
+  --text-main: #c4ceb7;
+  --text-muted: #6c7d5c;
+  --text-green: #39ff14; /* Bright phosphor tactical green */
+  --text-cyan: #00e5ff;
+  --text-yellow: #f0a818; /* Hazard yellow */
+  --text-orange: #ff6d00;
   
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-  --font-mono: 'Fira Code', 'Courier New', monospace;
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   
-  --glow-green: 0 0 10px rgba(74, 246, 38, 0.4);
-  --glow-pink: 0 0 15px rgba(255, 20, 147, 0.3);
+  --glow-green: 0 0 10px rgba(57, 255, 20, 0.45);
+  --glow-yellow: 0 0 12px rgba(240, 168, 24, 0.4);
 }
 
 /* Reset and basic setup */
@@ -36,11 +35,24 @@
 html, body {
   width: 100%;
   height: 100%;
-  height: 100dvh; /* dynamic viewport height to fix mobile browser scroll bars */
+  height: 100dvh;
   overflow: hidden;
-  background-color: #0d0d0d;
-  font-family: var(--font-sans);
+  background-color: #0b0c08;
+  font-family: var(--font-mono); /* Monospace default fits the tactical theme */
   color: var(--text-main);
+  position: relative;
+}
+
+/* Scanlines overlay effect to look like an old military CRT screen */
+body::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 9999;
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
 }
 
 /* Canvas Confetti */
@@ -51,119 +63,150 @@ html, body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 9998;
 }
 
-/* Workbench Structure */
-.workbench {
-  display: flex;
-  flex-direction: column;
+/* Parachute drop animation */
+.parachute-drop {
+  position: absolute;
+  left: 50%;
+  width: 80px;
+  height: 96px;
+  margin-left: -40px; /* Center */
+  z-index: 9500;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.parachute-drop.active {
+  animation: dropParachute 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.parachute-svg {
   width: 100%;
   height: 100%;
-  height: 100dvh;
-  background-color: var(--bg-workbench);
-  position: relative;
-  z-index: 10;
+  filter: drop-shadow(var(--glow-yellow));
 }
 
-.status-bar {
-  height: 22px;
-  background-color: var(--bg-status);
-  color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  padding: 0 8px;
-  font-family: var(--font-sans);
-  user-select: none;
-  z-index: 100;
-}
-
-.status-left, .status-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  height: 100%;
-}
-
-.status-item.bg-blue {
-  background-color: #007acc;
-  padding: 0 4px;
-}
-
-/* Content Layout (Sidebar + Editor Area) */
-.sidebar + .editor-area {
-  flex: 1;
-}
-
+/* Workbench Grid (Sidebar/HUD Radar + Editor Area) */
 .workbench {
   display: grid;
   grid-template-columns: 240px 1fr;
   grid-template-rows: 1fr 22px;
   height: 100dvh;
+  position: relative;
+  z-index: 10;
 }
 
+/* Sidebar / Telemetry Monitor */
 .sidebar {
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   user-select: none;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .sidebar-header {
-  padding: 10px 20px;
+  padding: 12px 16px;
   font-weight: 600;
   color: var(--text-muted);
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border-color);
+  font-family: var(--font-mono);
 }
 
-.file-tree {
-  padding: 5px 10px;
-}
-
-.tree-item {
-  display: flex;
-  align-items: center;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  gap: 6px;
-  color: var(--text-muted);
-}
-
-.tree-item.folder {
-  font-weight: 600;
-  color: #dddddd;
-}
-
-.tree-item.file {
-  padding-left: 20px;
-}
-
-.tree-item.active {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-}
-
-.tree-item:hover {
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
-.tree-items {
+.hud-monitor {
+  padding: 20px 15px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
-/* Main Editor Area */
+/* RADAR SCANNER EFFECT */
+.radar-container {
+  width: 130px;
+  height: 130px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle, rgba(44,53,31,0.2) 0%, rgba(18,21,13,0.8) 100%);
+  box-shadow: inset 0 0 15px rgba(57,255,14,0.1);
+}
+
+/* concentric circle lines in radar */
+.radar-grid {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle at center, transparent 30%, var(--border-color) 31%, transparent 32%, transparent 60%, var(--border-color) 61%, transparent 62%),
+    linear-gradient(to right, transparent 49.5%, var(--border-color) 49.5%, var(--border-color) 50.5%, transparent 50.5%),
+    linear-gradient(to bottom, transparent 49.5%, var(--border-color) 49.5%, var(--border-color) 50.5%, transparent 50.5%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.radar-sweep {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg at 50% 50%, rgba(57,255,20,0.15) 0deg, rgba(57,255,20,0.05) 90deg, transparent 180deg);
+  border-radius: 50%;
+  animation: sweep 4s linear infinite;
+  transform-origin: center;
+}
+
+.radar-blip {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--text-green);
+  box-shadow: var(--glow-green);
+  animation: blinkBlip 1.5s infinite ease-in-out;
+}
+
+#blip-home {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--text-yellow);
+  box-shadow: var(--glow-yellow);
+}
+
+.blip-drop {
+  animation: blinkBlip 0.8s infinite ease-in-out;
+}
+
+/* Telemetry stats */
+.telemetry-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(47, 59, 34, 0.4);
+  padding-bottom: 4px;
+}
+
+.telemetry-row .label {
+  color: var(--text-muted);
+}
+
+.telemetry-row .val {
+  font-weight: bold;
+}
+
+/* Main Workspace Editor Layout */
 .editor-area {
   display: flex;
   flex-direction: column;
@@ -186,17 +229,19 @@ html, body {
   padding: 0 16px;
   background-color: var(--bg-tab-inactive);
   border-right: 1px solid var(--border-color);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   cursor: pointer;
   gap: 8px;
   height: 100%;
+  letter-spacing: 0.5px;
 }
 
 .tab.active {
   background-color: var(--bg-tab-active);
-  color: #ffffff;
-  border-top: 1px solid var(--bg-status);
+  color: var(--text-green);
+  text-shadow: var(--glow-green);
+  border-top: 2px solid var(--text-green);
 }
 
 .tab .close-btn {
@@ -215,12 +260,6 @@ html, body {
   opacity: 1;
 }
 
-.tab .preview-tag {
-  font-size: 10px;
-  opacity: 0.5;
-  font-style: italic;
-}
-
 .editor-window {
   flex: 1;
   position: relative;
@@ -229,10 +268,10 @@ html, body {
   flex-direction: column;
 }
 
-/* Terminal Panel styling */
+/* Terminal panel logs styling */
 .terminal-panel {
   flex: 1;
-  background-color: #121212;
+  background-color: #0b0c08;
   padding: 24px;
   font-family: var(--font-mono);
   font-size: 14px;
@@ -240,14 +279,18 @@ html, body {
   line-height: 1.6;
 }
 
+.terminal-panel.hidden {
+  display: none !important;
+}
+
 .terminal-body {
   max-width: 800px;
   margin: 0 auto;
-  color: #eeeeee;
+  color: var(--text-main);
 }
 
 .terminal-panel .prompt {
-  color: #569cd6;
+  color: var(--text-yellow);
 }
 
 .terminal-panel .typed-command {
@@ -264,17 +307,19 @@ html, body {
 
 .terminal-log.log-success {
   color: var(--text-green);
+  text-shadow: var(--glow-green);
 }
 
 .terminal-log.log-info {
-  color: var(--text-cyan);
+  color: var(--text-main);
 }
 
 .terminal-log.log-warning {
   color: var(--text-yellow);
+  text-shadow: var(--glow-yellow);
 }
 
-/* Progress bar in terminal */
+/* Progress bar inside tactical hud */
 .progress-bar-container {
   display: flex;
   align-items: center;
@@ -285,11 +330,11 @@ html, body {
 .progress-bar {
   flex: 1;
   max-width: 200px;
-  height: 12px;
-  background: #252526;
-  border-radius: 6px;
+  height: 10px;
+  background: #171d12;
+  border-radius: 2px;
   overflow: hidden;
-  border: 1px solid #3c3c3c;
+  border: 1px solid var(--border-color);
 }
 
 .progress-fill {
@@ -300,7 +345,6 @@ html, body {
   transition: width 0.05s ease-out;
 }
 
-/* Cursor blinking animation */
 .cursor {
   display: inline-block;
   width: 8px;
@@ -311,7 +355,7 @@ html, body {
   vertical-align: middle;
 }
 
-/* Markdown preview screen (The actual beautiful gratitude card) */
+/* Operations briefing appreciation document */
 .markdown-preview {
   flex: 1;
   overflow-y: auto;
@@ -319,6 +363,10 @@ html, body {
   background-color: var(--bg-editor);
   display: flex;
   justify-content: center;
+}
+
+.markdown-preview.hidden {
+  display: none !important;
 }
 
 .hidden {
@@ -332,13 +380,15 @@ html, body {
   animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Typography of card */
+/* HUD headers styling */
 .appreciation-header h1 {
-  font-family: var(--font-sans);
-  font-size: 32px;
+  font-family: var(--font-mono);
+  font-size: 30px;
   font-weight: 700;
   margin-bottom: 12px;
   color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .tag-row {
@@ -352,74 +402,92 @@ html, body {
   font-size: 11px;
   font-family: var(--font-mono);
   padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
+  border-radius: 2px;
+  font-weight: bold;
 }
 
 .badge-success {
-  background-color: rgba(74, 246, 38, 0.15);
+  background-color: rgba(57, 255, 20, 0.1);
   color: var(--text-green);
-  border: 1px solid rgba(74, 246, 38, 0.3);
+  border: 1px solid rgba(57, 255, 20, 0.4);
 }
 
 .badge-joy {
-  background-color: rgba(255, 20, 147, 0.15);
-  color: #ff1493;
-  border: 1px solid rgba(255, 20, 147, 0.3);
+  background-color: rgba(255, 109, 0, 0.1);
+  color: var(--text-orange);
+  border: 1px solid rgba(255, 109, 0, 0.4);
 }
 
 .badge-stat {
-  background-color: rgba(79, 193, 255, 0.15);
+  background-color: rgba(0, 229, 255, 0.1);
   color: var(--text-cyan);
-  border: 1px solid rgba(79, 193, 255, 0.3);
+  border: 1px solid rgba(0, 229, 255, 0.4);
 }
 
 .badge-friend {
-  background-color: rgba(255, 215, 0, 0.15);
-  color: #ffd700;
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  background-color: rgba(240, 168, 24, 0.1);
+  color: var(--text-yellow);
+  border: 1px solid rgba(240, 168, 24, 0.4);
 }
 
 .appreciation-body {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.7;
 }
 
 .appreciation-body .intro {
-  font-size: 18px;
-  color: #e0e0e0;
+  font-size: 17px;
+  color: #dddddd;
   margin-bottom: 20px;
 }
 
-/* Quote Box */
+/* Stencil quote decal */
 .quote-card {
-  background-color: rgba(255, 255, 255, 0.02);
-  border-left: 4px solid var(--bg-status);
+  background-color: rgba(44, 53, 31, 0.2);
+  border-left: 4px solid var(--text-yellow);
+  border-right: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding: 20px 24px;
   margin: 28px 0;
-  border-radius: 0 8px 8px 0;
+  border-radius: 4px;
+  position: relative;
+}
+
+.quote-card::before {
+  content: "CLASSIFIED BRIEFING";
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  font-size: 8px;
+  background-color: var(--bg-editor);
+  padding: 0 4px;
+  color: var(--text-yellow);
+  letter-spacing: 1px;
 }
 
 .quote-card blockquote {
   font-style: italic;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 300;
   color: #ffffff;
   margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
 .quote-card cite {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-muted);
   display: block;
 }
 
 .appreciation-body .letter {
   margin-bottom: 30px;
-  color: #dddddd;
+  color: #b8c1ad;
+  font-family: var(--font-sans);
 }
 
-/* SVG Cake and Heart styling */
+/* Interactive crate details */
 .interactive-assets {
   display: flex;
   justify-content: center;
@@ -440,7 +508,7 @@ html, body {
 }
 
 #cake-wrapper:hover {
-  transform: scale(1.15) rotate(2deg);
+  transform: scale(1.1) rotate(-1deg);
 }
 
 #cake-wrapper:active {
@@ -450,13 +518,16 @@ html, body {
 #cake-icon {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(var(--glow-pink));
+}
+
+.beacon-led {
+  animation: beaconBlink 0.6s infinite alternate;
 }
 
 #heart-icon {
   width: 64px;
   height: 64px;
-  filter: drop-shadow(0 0 10px rgba(255, 77, 77, 0.4));
+  filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.3));
 }
 
 .tap-hint {
@@ -465,38 +536,34 @@ html, body {
   font-family: var(--font-mono);
   font-size: 9px;
   color: var(--text-muted);
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.04);
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 2px;
+  border: 1px solid var(--border-color);
   pointer-events: none;
   opacity: 0.8;
 }
 
 /* Animations */
 .pulse-animation {
-  animation: beat 1.2s infinite ease-in-out;
+  animation: beat 1.4s infinite ease-in-out;
 }
 
-.flame {
-  animation: flicker 0.15s infinite alternate;
-  transform-origin: center bottom;
-}
-
-/* AI Mode styling */
+/* AI Command container HUD style */
 .ai-mode-container {
-  background-color: #121212;
+  background-color: #0b0c08;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 4px;
   margin-top: 24px;
   margin-bottom: 28px;
   overflow: hidden;
   font-family: var(--font-mono);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   animation: fadeIn 0.4s ease forwards;
 }
 
 .ai-box-header {
-  background-color: #1a1a1a;
+  background-color: #151a0f;
   padding: 8px 16px;
   display: flex;
   justify-content: space-between;
@@ -506,7 +573,7 @@ html, body {
 }
 
 .ai-title {
-  color: var(--text-cyan);
+  color: var(--text-yellow);
 }
 
 .ai-status {
@@ -516,14 +583,14 @@ html, body {
 
 .ai-box-content {
   padding: 16px 20px;
-  font-size: 14px;
+  font-size: 13px;
   min-height: 90px;
-  color: #dddddd;
+  color: var(--text-main);
   white-space: pre-wrap;
   line-height: 1.6;
 }
 
-/* Large Button layout for WhatsApp clicks */
+/* Command Deploy Button */
 .button-row {
   display: flex;
   justify-content: center;
@@ -531,46 +598,51 @@ html, body {
 }
 
 .btn {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 14px 28px;
-  border-radius: 25px;
-  border: none;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: 1px solid var(--text-green);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  background-color: #007acc;
-  color: #ffffff;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background-color: rgba(57, 255, 20, 0.05);
+  color: var(--text-green);
+  text-shadow: var(--glow-green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 122, 204, 0.4);
-  background-color: #008be5;
+  box-shadow: var(--glow-green);
+  background-color: var(--text-green);
+  color: #0b0c08;
+  text-shadow: none;
 }
 
 .btn:active {
   transform: translateY(1px);
 }
 
-/* Toast Achievements Panel */
+/* Toast alert notification styling */
 .toast-notification {
   position: absolute;
   bottom: 30px;
   right: 20px;
-  background-color: #252526;
-  border: 1px solid #007acc;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--text-yellow);
   box-shadow: var(--shadow-lg);
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 16px;
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  width: 320px;
+  width: 330px;
   z-index: 10000;
   animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
@@ -588,15 +660,17 @@ html, body {
 }
 
 .toast-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--text-yellow);
+  text-shadow: var(--glow-yellow);
   margin-bottom: 4px;
+  font-family: var(--font-mono);
 }
 
 .toast-text {
-  font-size: 12px;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-main);
 }
 
 .toast-close {
@@ -613,6 +687,21 @@ html, body {
 }
 
 /* Keyframes */
+@keyframes sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes blinkBlip {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@keyframes beaconBlink {
+  from { fill: #990000; filter: none; }
+  to { fill: #ff3333; filter: drop-shadow(0 0 5px #ff3333); }
+}
+
 @keyframes blink {
   50% { opacity: 0; }
 }
@@ -629,7 +718,7 @@ html, body {
 @keyframes slideUpFade {
   from {
     opacity: 0;
-    transform: translateY(25px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -650,18 +739,43 @@ html, body {
 
 @keyframes beat {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.08); }
 }
 
-@keyframes flicker {
-  0% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
-  100% { transform: scale(1.05) rotate(1deg); opacity: 1; }
+/* Parachute swaying descension animation */
+@keyframes dropParachute {
+  0% {
+    top: -120px;
+    transform: translateX(0) rotate(5deg);
+    opacity: 1;
+  }
+  20% {
+    transform: translateX(-30px) rotate(-6deg);
+  }
+  40% {
+    transform: translateX(25px) rotate(4deg);
+  }
+  60% {
+    transform: translateX(-20px) rotate(-4deg);
+  }
+  80% {
+    transform: translateX(15px) rotate(2deg);
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.9;
+  }
+  100% {
+    top: 75dvh;
+    transform: translateX(0) rotate(0deg);
+    opacity: 0;
+  }
 }
 
 /* Mobile responsive adaptations */
 @media (max-width: 550px) {
   .workbench {
-    grid-template-columns: 1fr; /* Hide Explorer sidebar completely on mobile */
+    grid-template-columns: 1fr; /* Hide HUD radar display completely on mobile */
   }
   
   .sidebar {
@@ -678,7 +792,7 @@ html, body {
   }
   
   .appreciation-header h1 {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 8px;
     text-align: center;
   }
@@ -686,39 +800,39 @@ html, body {
   .tag-row {
     justify-content: center;
     gap: 6px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
   
   .badge {
-    font-size: 10px;
-    padding: 2px 6px;
+    font-size: 9px;
+    padding: 2px 4px;
   }
   
   .appreciation-body .intro {
-    font-size: 15px;
+    font-size: 13px;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   
   .quote-card {
-    padding: 12px 16px;
-    margin: 12px 0;
+    padding: 10px 14px;
+    margin: 10px 0;
   }
   
   .quote-card blockquote {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1.45;
   }
   
   .appreciation-body .letter {
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
   }
   
   .interactive-assets {
-    gap: 30px;
-    margin: 12px 0;
+    gap: 24px;
+    margin: 10px 0;
   }
   
   .asset-wrapper {
@@ -732,8 +846,8 @@ html, body {
   }
   
   #heart-icon {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
   }
   
   .tap-hint {
@@ -743,22 +857,22 @@ html, body {
   }
   
   .ai-mode-container {
-    margin-top: 12px;
-    margin-bottom: 12px;
-    font-size: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 11px;
   }
   
   .ai-box-content {
-    padding: 10px 14px;
+    padding: 8px 12px;
     min-height: 70px;
-    font-size: 12px;
+    font-size: 11px;
   }
   
   .btn {
     width: 100%;
     justify-content: center;
     padding: 12px 20px;
-    font-size: 14px;
+    font-size: 13px;
   }
   
   .toast-notification {

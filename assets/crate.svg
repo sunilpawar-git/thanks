@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Ground plate -->
+  <path d="M15,85 L85,85" stroke="#2a3014" stroke-width="4" stroke-linecap="round" />
+  <!-- Rugged outer container border -->
+  <rect x="22" y="32" width="56" height="50" rx="3" fill="#3c4324" stroke="#1d220f" stroke-width="3" />
+  <!-- Diagonal braces (X shape) -->
+  <line x1="26" y1="36" x2="74" y2="78" stroke="#272c15" stroke-width="6" stroke-linecap="round" />
+  <line x1="74" y1="36" x2="26" y2="78" stroke="#272c15" stroke-width="6" stroke-linecap="round" />
+  <!-- Steel corners / brackets -->
+  <rect x="20" y="30" width="8" height="8" fill="#555f37" />
+  <rect x="72" y="30" width="8" height="8" fill="#555f37" />
+  <rect x="20" y="74" width="8" height="8" fill="#555f37" />
+  <rect x="72" y="74" width="8" height="8" fill="#555f37" />
+  <!-- Stencil details -->
+  <circle cx="50" cy="55" r="8" fill="none" stroke="#f0a818" stroke-width="2" stroke-dasharray="3,2" />
+  <!-- Star symbol in center -->
+  <path d="M 50 49 L 52 53 L 57 53.5 L 53.5 57 L 54.5 62 L 50 59.5 L 45.5 62 L 46.5 57 L 43 53.5 L 48 53 Z" fill="#f0a818" />
+  <!-- Handle loops -->
+  <path d="M 18 52 C 15 52, 15 62, 18 62" fill="none" stroke="#555f37" stroke-width="3" stroke-linecap="round" />
+  <path d="M 82 52 C 85 52, 85 62, 82 62" fill="none" stroke="#555f37" stroke-width="3" stroke-linecap="round" />
+  <!-- Glowing Beacon / LED on top -->
+  <rect x="47" y="27" width="6" height="5" fill="#555f37" />
+  <circle cx="50" cy="24" r="3" fill="#ff3333" class="beacon-led" />
+</svg>

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Gratitude Engine v42.0 - Birthday OS</title>
+  <title>Tactical Gratitude HUD v42.0 - Birthday OS</title>
   <!-- SEO Best Practices -->
-  <meta name="description" content="Birthday OS Appreciation Module: A personalized gratitude engine built for friends wishing me on my birthday.">
+  <meta name="description" content="Birthday OS Appreciation Module: Tactical Paratrooper Gratitude System.">
   
   <!-- Font Links -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css?v=42.0">
 </head>
@@ -18,130 +18,132 @@
   <!-- Canvas for Confetti Overlay -->
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- VS Code Workbench Wrapper -->
+  <!-- Interactive Parachute Drop Animation -->
+  <div class="parachute-drop hidden" id="parachute-drop-container">
+    <svg viewBox="0 0 100 120" class="parachute-svg">
+      <!-- Parachute canopy -->
+      <path d="M 10 40 C 10 10, 90 10, 90 40 C 90 40, 80 35, 70 40 C 60 35, 50 40, 50 40 C 50 40, 40 35, 30 40 C 20 35, 10 40, 10 40 Z" fill="#f0a818" stroke="#d2691e" stroke-width="2" />
+      <!-- Parachute lines -->
+      <line x1="10" y1="40" x2="50" y2="85" stroke="#aaaaaa" stroke-width="1" />
+      <line x1="30" y1="40" x2="50" y2="85" stroke="#aaaaaa" stroke-width="1" />
+      <line x1="50" y1="40" x2="50" y2="85" stroke="#aaaaaa" stroke-width="1" />
+      <line x1="70" y1="40" x2="50" y2="85" stroke="#aaaaaa" stroke-width="1" />
+      <line x1="90" y1="40" x2="50" y2="85" stroke="#aaaaaa" stroke-width="1" />
+      <!-- Cargo Crate attached to chute -->
+      <rect x="42" y="85" width="16" height="15" rx="1" fill="#3c4324" stroke="#1d220f" stroke-width="1" />
+      <line x1="44" y1="87" x2="56" y2="98" stroke="#272c15" stroke-width="2" />
+      <line x1="56" y1="87" x2="44" y2="98" stroke="#272c15" stroke-width="2" />
+    </svg>
+  </div>
+
+  <!-- Tactical HUD Workbench Wrapper -->
   <div class="workbench" id="workbench-app">
-    <!-- Sidebar / File Explorer -->
+    <!-- Sidebar / Radar Controller -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <span>EXPLORER: THANKS</span>
+        <span>TACTICAL HUD DISPLAY</span>
       </div>
-      <div class="file-tree">
-        <div class="tree-item folder open">
-          <span class="arrow">▼</span>
-          <span class="icon">📁</span>
-          <span class="label">thanks</span>
+      <div class="hud-monitor">
+        <!-- Radar Circle Panel -->
+        <div class="radar-container">
+          <div class="radar-sweep"></div>
+          <div class="radar-grid"></div>
+          <div class="radar-blip" id="blip-home"></div>
+          <div class="radar-blip blip-drop" id="blip-target" style="top: 30%; left: 70%;"></div>
         </div>
-        <div class="tree-items">
-          <div class="tree-item file">
-            <span class="icon">🌐</span>
-            <span class="label">index.html</span>
-          </div>
-          <div class="tree-item file">
-            <span class="icon">🎨</span>
-            <span class="label">style.css</span>
-          </div>
-          <div class="tree-item file">
-            <span class="icon">⚡</span>
-            <span class="label">script.js</span>
-          </div>
-          <div class="tree-item file">
-            <span class="icon">✨</span>
-            <span class="label">confetti.js</span>
-          </div>
-          <div class="tree-item folder">
-            <span class="arrow">▶</span>
-            <span class="icon">📁</span>
-            <span class="label">assets</span>
-          </div>
-          <div class="tree-item file active">
-            <span class="icon">📝</span>
-            <span class="label">Appreciation.md</span>
-          </div>
+        
+        <!-- Live telemetry feed -->
+        <div class="telemetry-feed">
+          <div class="telemetry-row"><span class="label">SYS_STATE:</span> <span class="val text-green">STANDBY</span></div>
+          <div class="telemetry-row"><span class="label">ALTITUDE:</span> <span class="val">12,000 FT</span></div>
+          <div class="telemetry-row"><span class="label">COMMS:</span> <span class="val text-green">SECURE</span></div>
+          <div class="telemetry-row"><span class="label">WIND:</span> <span class="val">N-NW @ 5 KTS</span></div>
+          <div class="telemetry-row"><span class="label">GPS_LOCK:</span> <span class="val text-green">ALPHA_9</span></div>
         </div>
       </div>
     </aside>
 
-    <!-- Main Workspace (Tabs & Editor/Terminal area) -->
+    <!-- Main Workspace (HUD tabs & Operations Briefing) -->
     <main class="editor-area">
-      <!-- Tabs bar -->
+      <!-- Operations tabs -->
       <div class="tabs-container">
         <div class="tab active" id="tab-appreciation">
-          <span class="icon">📝</span>
-          <span class="tab-title">Appreciation.md <span class="preview-tag">Preview</span></span>
+          <span class="icon">📁</span>
+          <span class="tab-title">[FILE-01: APPRECIATION.TXT]</span>
           <span class="close-btn">×</span>
         </div>
         <div class="tab" id="tab-terminal">
-          <span class="icon">💻</span>
-          <span class="tab-title">terminal</span>
+          <span class="icon">📡</span>
+          <span class="tab-title">[SECURE-COMMS: COM]</span>
           <span class="close-btn">×</span>
         </div>
       </div>
 
-      <!-- Editor Window -->
+      <!-- Main operations window -->
       <div class="editor-window">
-        <!-- Terminal Panel (Pre-execution & AI typing screen) -->
+        <!-- Secure terminal communication logs -->
         <div class="terminal-panel" id="terminal-screen">
           <div class="terminal-body" id="terminal-console">
-            <div class="line"><span class="prompt">C:\Users\Sunil&gt;</span> <span class="typed-command">BirthdayParser.exe --target <span id="terminal-target-name">Friend</span></span></div>
+            <div class="line"><span class="prompt">SECURE_NET:\&gt;</span> <span class="typed-command">deploy_gratitude.sh --all-units <span id="terminal-target-name">Friend</span></span></div>
             <div id="boot-sequence-logs">
-              <!-- Sequential boot output elements will be appended here by JS -->
+              <!-- Sequential telemetry logs will be printed here -->
             </div>
           </div>
         </div>
 
-        <!-- Rendered Markdown Preview Area (Appreciation card) -->
+        <!-- Operations Briefing (Appreciation Document) -->
         <div class="markdown-preview hidden" id="preview-screen">
           <div class="appreciation-container">
             <header class="appreciation-header">
-              <h1>👋 Hey <span class="visitor-name">Friend</span>!</h1>
+              <h1>👋 ATTN: <span class="visitor-name">Friend</span>!</h1>
               <div class="tag-row">
-                <span class="badge badge-success">✓ Wish received</span>
-                <span class="badge badge-joy">✓ Smile generated</span>
-                <span class="badge badge-stat">✓ Happiness +10</span>
-                <span class="badge badge-friend">✓ Friend detected</span>
+                <span class="badge badge-success">[ MISSION: RECEIVED ]</span>
+                <span class="badge badge-joy">[ EMOTION: POSITIVE ]</span>
+                <span class="badge badge-stat">[ MORALE: +10 XP ]</span>
+                <span class="badge badge-friend">[ TARGET: FRIEND ]</span>
               </div>
             </header>
 
             <section class="appreciation-body">
-              <p class="intro">Your birthday wish became part of my <strong>Version 42.0 Release</strong>.</p>
+              <p class="intro">Your wish was successfully received and deployed into my <strong>Module v42.0 Release</strong>.</p>
               
               <div class="quote-card">
                 <blockquote>
                   "People often forget gifts, but they rarely forget kind words."
                 </blockquote>
-                <cite>— Sunil</cite>
+                <cite>— Sunil // Appreciation Protocol</cite>
               </div>
 
               <p class="letter">
                 Thank you for taking a minute out of your day to make mine better.
               </p>
 
-              <!-- Interactive Cake Section -->
+              <!-- Interactive Assets (Crate replaces Cake) -->
               <div class="interactive-assets">
-                <div class="asset-wrapper" id="cake-wrapper" title="Double tap the cake for a secret!">
-                  <img src="assets/cake.svg" alt="Birthday Cake" id="cake-icon">
+                <div class="asset-wrapper" id="cake-wrapper" title="Double tap the crate to trigger supply drop!">
+                  <img src="assets/crate.svg" alt="Cargo Drop Crate" id="cake-icon">
                   <div class="tap-hint">Double Tap!</div>
                 </div>
                 <div class="asset-wrapper" id="heart-wrapper">
-                  <img src="assets/heart.svg" alt="Heart" id="heart-icon" class="pulse-animation">
+                  <img src="assets/heart.svg" alt="Tactical Beacon" id="heart-icon" class="pulse-animation">
                 </div>
               </div>
 
-              <!-- AI Message Display slot (types out the random thank yous) -->
+              <!-- AI Message Display slot (types out the random intel reports) -->
               <div class="ai-mode-container hidden" id="ai-message-box">
                 <div class="ai-box-header">
-                  <span class="ai-title">🤖 AI Gratitude Engine</span>
+                  <span class="ai-title">📡 SECURE DECRYPTION INTEL</span>
                   <span class="ai-status">Ready</span>
                 </div>
                 <div class="ai-box-content" id="ai-message-content">
-                  <!-- Custom AI message prints here -->
+                  <!-- Custom messages streams here -->
                 </div>
               </div>
 
-              <!-- Interactive Buttons -->
+              <!-- Interactive Tactical Command button -->
               <div class="button-row">
                 <button class="btn btn-primary" id="btn-generate-ai">
-                  <span class="btn-icon">🎲</span> Generate Thank You
+                  <span class="btn-icon">📦</span> Request Random Intel
                 </button>
               </div>
             </section>
@@ -153,22 +155,22 @@
     <!-- Status Bar -->
     <footer class="status-bar">
       <div class="status-left">
-        <span class="status-item bg-blue"><span class="icon">⎋</span> main*</span>
-        <span class="status-item text-green" id="status-build-text">⚡ Building...</span>
+        <span class="status-item bg-blue"><span class="icon">⎋</span> COM_LNK: SECURE</span>
+        <span class="status-item text-green" id="status-build-text">📡 DEPLOYING PAYLOAD...</span>
       </div>
       <div class="status-right">
-        <span class="status-item">Ln 1, Col 1</span>
-        <span class="status-item">UTF-8</span>
-        <span class="status-item">Markdown</span>
+        <span class="status-item">GPS: LOCK</span>
+        <span class="status-item">9600 BAUD</span>
+        <span class="status-item">Tactical OS v42.0</span>
       </div>
     </footer>
 
-    <!-- VS Code style Toast Notification for Achievements -->
+    <!-- HUD style notification toast for achievements -->
     <div class="toast-notification hidden" id="achievement-toast">
       <div class="toast-icon">🏆</div>
       <div class="toast-body">
-        <h4 class="toast-title">Achievement Unlocked!</h4>
-        <p class="toast-text" id="achievement-desc">You found the hidden birthday feature.</p>
+        <h4 class="toast-title">HUD ALERT: ACHIEVEMENT UNLOCKED!</h4>
+        <p class="toast-text" id="achievement-desc">Supply drop decrypted. Infinite gratitude loaded.</p>
       </div>
       <button class="toast-close" id="btn-close-toast">×</button>
     </div>
