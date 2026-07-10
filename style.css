@@ -481,6 +481,43 @@ body::before {
   display: block;
 }
 
+/* Intercepted Transmission (wisher's original message) */
+.transmission-card {
+  margin: 20px 0;
+  background: rgba(255, 165, 0, 0.05);
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  border-left: 3px solid #f0a818;
+  border-radius: 3px;
+  padding: 14px 16px;
+  animation: subtle-glow-amber 3s ease-in-out infinite;
+}
+
+@keyframes subtle-glow-amber {
+  0%, 100% { border-left-color: #f0a818; box-shadow: 0 0 6px rgba(240, 168, 24, 0.15); }
+  50% { border-left-color: #ffcc44; box-shadow: 0 0 12px rgba(240, 168, 24, 0.3); }
+}
+
+.transmission-header {
+  margin-bottom: 10px;
+}
+
+.transmission-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #f0a818;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.transmission-body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: #d4c9a8;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .appreciation-body .letter {
   margin-bottom: 30px;
   color: #b8c1ad;

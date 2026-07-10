@@ -31,6 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
     terminalNameSpan.textContent = visitorName;
   }
 
+  // --- Intercepted Transmission: show wisher's original message if ?msg= is present ---
+  const rawMsg = urlParams.get('msg') || '';
+  if (rawMsg.trim()) {
+    const sanitizedMsg = sanitizeHTML(rawMsg.trim());
+    const card = document.getElementById('transmission-card');
+    const msgBody = document.getElementById('transmission-message');
+    if (card && msgBody) {
+      msgBody.textContent = rawMsg.trim(); // textContent is safe, no XSS risk
+      card.classList.remove('hidden');
+    }
+  }
+
   // HUD Tab Switcher
   const tabAppreciation = document.getElementById('tab-appreciation');
   const tabTerminal = document.getElementById('tab-terminal');

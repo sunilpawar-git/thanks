@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Birthday Link Generator — Private Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f0a;
+      --panel: #13160e;
+      --border: #2a3020;
+      --green: #39ff14;
+      --amber: #f0a818;
+      --text: #c8d4b8;
+      --muted: #5a6650;
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 580px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--green);
+      border-radius: 4px;
+      padding: 28px;
+    }
+
+    .panel-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .panel-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--amber);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #0a0c08;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 18px;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--green);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--green);
+      border-radius: 3px;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--green);
+      color: #000;
+    }
+
+    .output-section {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .output-section.visible { display: block; }
+
+    .output-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .output-link {
+      background: #0a0c08;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      word-break: break-all;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .btn-copy {
+      width: 100%;
+      padding: 10px;
+      background: var(--amber);
+      border: none;
+      border-radius: 3px;
+      color: #000;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-copy:hover { opacity: 0.85; }
+
+    .copy-confirm {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--green);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-confirm.show { opacity: 1; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    .preview-hint {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .preview-hint a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div class="panel-title">🎯 Birthday Link Generator — Private</div>
+    <p class="panel-sub">Fill in the wisher's name and their WhatsApp message, then generate a personalized thank-you link to paste back.</p>
+
+    <label for="input-name">Wisher's Name</label>
+    <input type="text" id="input-name" placeholder="e.g. Amit" autocomplete="off">
+
+    <label for="input-msg">Their WhatsApp Message (paste it here)</label>
+    <textarea id="input-msg" placeholder="e.g. Happy Birthday Sunil bhai! 🎂 Wishing you all the best!"></textarea>
+
+    <button class="btn" id="btn-generate">⚡ Generate Personalized Link</button>
+
+    <div class="output-section" id="output-section">
+      <hr class="divider">
+      <div class="output-label">📋 Your Personalized Link</div>
+      <div class="output-link" id="output-link"></div>
+      <button class="btn-copy" id="btn-copy">📋 Copy Link to Clipboard</button>
+      <div class="copy-confirm" id="copy-confirm">✓ Copied! Paste it on WhatsApp.</div>
+      <hr class="divider">
+      <p class="preview-hint">
+        <a id="preview-link" href="#" target="_blank">↗ Preview how it looks</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = 'https://sunilpawar-git.github.io/thanks/';
+
+    document.getElementById('btn-generate').addEventListener('click', () => {
+      const name = document.getElementById('input-name').value.trim();
+      const msg  = document.getElementById('input-msg').value.trim();
+
+      if (!name) {
+        document.getElementById('input-name').focus();
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.set('name', name);
+      if (msg) params.set('msg', msg);
+
+      const url = BASE_URL + '?' + params.toString();
+
+      document.getElementById('output-link').textContent = url;
+      document.getElementById('preview-link').href = url;
+      document.getElementById('output-section').classList.add('visible');
+    });
+
+    document.getElementById('btn-copy').addEventListener('click', () => {
+      const url = document.getElementById('output-link').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        const confirm = document.getElementById('copy-confirm');
+        confirm.classList.add('show');
+        setTimeout(() => confirm.classList.remove('show'), 2500);
+      });
+    });
+  </script>
+</body>
+</html>
