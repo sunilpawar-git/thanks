@@ -79,6 +79,23 @@
         </div>
       </div>
 
+      <!-- Mobile-only HUD strip: radar + telemetry shown as a horizontal bar -->
+      <div class="mobile-hud-strip">
+        <div class="mobile-radar">
+          <div class="radar-sweep"></div>
+          <div class="radar-grid"></div>
+          <div class="radar-blip" style="top:50%;left:50%;transform:translate(-50%,-50%);background:#f0a818;box-shadow:0 0 8px rgba(240,168,24,0.5);"></div>
+          <div class="radar-blip blip-drop" style="top:30%;left:70%;"></div>
+        </div>
+        <div class="mobile-telemetry">
+          <div class="mt-row"><span class="mt-label">SYS_STATE</span><span class="mt-val text-green">STANDBY</span></div>
+          <div class="mt-row"><span class="mt-label">ALTITUDE</span><span class="mt-val">12,000 FT</span></div>
+          <div class="mt-row"><span class="mt-label">COMMS</span><span class="mt-val text-green">SECURE</span></div>
+          <div class="mt-row"><span class="mt-label">WIND</span><span class="mt-val">N-NW @ 5 KTS</span></div>
+          <div class="mt-row"><span class="mt-label">GPS_LOCK</span><span class="mt-val text-green">ALPHA_9</span></div>
+        </div>
+      </div>
+
       <!-- Main operations window -->
       <div class="editor-window">
         <!-- Secure terminal communication logs -->
