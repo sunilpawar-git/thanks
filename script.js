@@ -1,8 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
   // --- Setup and Sanity Checks ---
   const urlParams = new URLSearchParams(window.location.search);
+
+  // Support ?d= base64-encoded payload (name + msg hidden in one param)
   let rawName = urlParams.get('name') || '';
-  
+  let rawMsg = urlParams.get('msg') || '';
+
+  const dParam = urlParams.get('d');
+  if (dParam) {
+    try {
+      const padded = dParam.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = (4 - padded.length % 4) % 4;
+      const obj = JSON.parse(decodeURIComponent(escape(atob(padded + '='.repeat(pad)))));
+      if (obj.n) rawName = obj.n;
+      if (obj.m) rawMsg = obj.m;
+    } catch (_) { /* malformed ?d= — ignore, fallback to empty */ }
+  }
+
   // Sanitize input to prevent XSS
   function sanitizeHTML(str) {
     return str.replace(/[&<>'"]/g, 
@@ -31,10 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     terminalNameSpan.textContent = visitorName;
   }
 
-  // --- Intercepted Transmission: show wisher's original message if ?msg= is present ---
-  const rawMsg = urlParams.get('msg') || '';
+  // --- Intercepted Transmission: show wisher's original message ---
   if (rawMsg.trim()) {
-    const sanitizedMsg = sanitizeHTML(rawMsg.trim());
     const card = document.getElementById('transmission-card');
     const msgBody = document.getElementById('transmission-message');
     if (card && msgBody) {

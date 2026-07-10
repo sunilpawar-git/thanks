@@ -221,8 +221,17 @@
     const outputLink = document.getElementById('output-link');
     const outputLabel = document.getElementById('output-label');
 
-    // Store the full (long) URL separately so preview always works
-    let fullUrl = '';
+    // Base64url encode name + msg as a compact ?d= param (message hidden, no external API needed)
+    function buildEncodedUrl(name, msg) {
+      const obj = { n: name };
+      if (msg) obj.m = msg;
+      const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(obj))))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+      return BASE_URL + '?d=' + b64;
+    }
+
+    // Store the encoded URL so preview always works regardless of shortener result
+    let encodedUrl = '';
 
     btn.addEventListener('click', async () => {
       const name = document.getElementById('input-name').value.trim();
@@ -233,12 +242,8 @@
         return;
       }
 
-      const params = new URLSearchParams();
-      params.set('name', name);
-      if (msg) params.set('msg', msg);
-
-      fullUrl = BASE_URL + '?' + params.toString();
-      document.getElementById('preview-link').href = fullUrl;
+      encodedUrl = buildEncodedUrl(name, msg);
+      document.getElementById('preview-link').href = encodedUrl;
 
       // Show loading state
       btn.textContent = '⏳ Shortening...';
@@ -246,37 +251,44 @@
       outputLink.textContent = 'Generating short link...';
       document.getElementById('output-section').classList.add('visible');
 
+      let shortened = null;
+
+      // Try cleanuri.com — POST, CORS-friendly
       try {
-        let shortened = null;
+        const r = await fetch('https://cleanuri.com/api/v1/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'url=' + encodeURIComponent(encodedUrl)
+        });
+        const d = await r.json();
+        if (d.result_url) shortened = d.result_url;
+      } catch (_) { /* try next */ }
 
-        // Try shrtco.de first — confirmed CORS-friendly from browsers
+      // Try is.gd
+      if (!shortened) {
         try {
-          const r = await fetch('https://api.shrtco.de/v2/shorten?url=' + encodeURIComponent(fullUrl));
+          const r = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(encodedUrl));
           const d = await r.json();
-          if (d.ok && d.result && d.result.full_short_link) {
-            shortened = d.result.full_short_link;
-          }
+          if (d.shorturl) shortened = d.shorturl;
         } catch (_) { /* try next */ }
+      }
 
-        // Fallback: is.gd
-        if (!shortened) {
-          try {
-            const r = await fetch('https://is.gd/create.php?format=json&url=' + encodeURIComponent(fullUrl));
-            const d = await r.json();
-            if (d.shorturl) shortened = d.shorturl;
-          } catch (_) { /* give up */ }
-        }
+      // Try shrtco.de
+      if (!shortened) {
+        try {
+          const r = await fetch('https://api.shrtco.de/v2/shorten?url=' + encodeURIComponent(encodedUrl));
+          const d = await r.json();
+          if (d.ok && d.result && d.result.full_short_link) shortened = d.result.full_short_link;
+        } catch (_) { /* give up */ }
+      }
 
-        if (shortened) {
-          outputLink.textContent = shortened;
-          outputLabel.textContent = '📋 Shortened Link (safe to share on WhatsApp)';
-        } else {
-          outputLink.textContent = fullUrl;
-          outputLabel.textContent = '📋 Full Link (shortener unavailable)';
-        }
-      } catch (e) {
-        outputLink.textContent = fullUrl;
-        outputLabel.textContent = '📋 Full Link (shortener unavailable)';
+      if (shortened) {
+        outputLink.textContent = shortened;
+        outputLabel.textContent = '📋 Shortened Link (safe to share on WhatsApp)';
+      } else {
+        // All shorteners failed — use the encoded URL (message is hidden in base64)
+        outputLink.textContent = encodedUrl;
+        outputLabel.textContent = '📋 Encoded Link — message hidden (paste this on WhatsApp)';
       }
 
       btn.textContent = '⚡ Generate & Shorten Link';
