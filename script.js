@@ -87,16 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusBuildText = document.getElementById('status-build-text');
 
   const bootSteps = [
-    { text: '[HUD BROADCAST INCOMING]', delay: 300, type: 'warning' },
-    { text: 'Connecting to Wish-Base Alpha drop network... OK', delay: 400, type: 'info' },
-    { text: 'Initializing Drop Protocol v42.0...', delay: 300, type: 'info' },
+    { text: '[HUD BROADCAST INCOMING]', delay: 700, type: 'warning' },
+    { text: 'Connecting to Wish-Base Alpha drop network... OK', delay: 900, type: 'info' },
+    { text: 'Initializing Drop Protocol v42.0...', delay: 700, type: 'info' },
     { text: 'PROGRESS_BAR', delay: 700 },
-    { text: `Target identified: ${visitorName}`, delay: 300, type: 'success' },
-    { text: 'Altitude verified: 12,000 FT [STABLE]', delay: 200, type: 'success' },
-    { text: 'Morale telemetry value: +10 XP logged', delay: 200, type: 'success' },
-    { text: 'Parachute deploy system: READY [100%]', delay: 250, type: 'success' },
-    { text: 'Payload deployed. Impact coordinates locked.', delay: 400, type: 'info' },
-    { text: 'MISSION STATUS: ACCOMPLISHED', delay: 300, type: 'success' }
+    { text: `Target identified: ${visitorName}`, delay: 700, type: 'success' },
+    { text: 'Altitude verified: 12,000 FT [STABLE]', delay: 600, type: 'success' },
+    { text: 'Morale telemetry value: +10 XP logged', delay: 600, type: 'success' },
+    { text: 'Parachute deploy system: READY [100%]', delay: 650, type: 'success' },
+    { text: 'Payload deployed. Impact coordinates locked.', delay: 900, type: 'info' },
+    { text: 'MISSION STATUS: ACCOMPLISHED', delay: 900, type: 'success' }
   ];
 
   function createLogLine(text, type = '') {
@@ -137,19 +137,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let progress = 0;
     const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 20) + 5;
+      progress += Math.floor(Math.random() * 15) + 5;
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
         fill.style.width = '100%';
         percent.textContent = '100%';
         percent.style.color = 'var(--text-green)';
-        setTimeout(callback, 200);
+        setTimeout(callback, 400);
       } else {
         fill.style.width = progress + '%';
         percent.textContent = progress + '%';
       }
-    }, 60);
+    }, 110);
   }
 
   let stepIndex = 0;
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confetti) {
           confetti.blast(2500);
         }
-      }, 600);
+      }, 1200);
       return;
     }
 
